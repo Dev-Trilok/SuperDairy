@@ -1,0 +1,42 @@
+﻿@model Core.Model.User
+
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-12 col-md-10">
+        <form id="createUser" asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactNo" class="control-label"></label>
+                <input asp-for="ContactNo" maxlength="10" type="number" class="form-control" />
+                <span asp-validation-for="ContactNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label asp-for="Role" class="control-label"></label><br/>
+                <input type="radio" class="form-check-input" id="roleAdmin"  asp-for="Role" value="@Core.UserRole.ADMIN"  />@Core.UserRole.ADMIN.ToString() <input type="radio" id="roleSupplier" class="form-check-input" checked asp-for="Role" value="@Core.UserRole.SUPPLIER"  />@Core.UserRole.SUPPLIER.ToString()
+                <br />
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" checked /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-1"></div>
+</div>

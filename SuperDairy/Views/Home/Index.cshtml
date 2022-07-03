@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="row">
+    <div class="calendar-container col-12 col-md-4"></div>
+    <div class="col-12 col-md-8"></div>
+</div>
+
+
+
+
+@section Stylesheet{
+<link rel="stylesheet" href="~/lib/calendar/style.css" />
+<link rel="stylesheet" href="~/lib/calendar/theme.css" />
+}
+@section Scripts {
+<script src="~/lib/calendar/calendar.js"></script>
+
+<script>
+      let calendar=null;
+      function dateChanged(date){
+          console.log(date)
+           $('.calendar-container').updateCalendarOptions({
+                date: date
+            });
+      }
+
+      $(function(){
+      calendar=  $('.calendar-container').calendar({
+            date:new Date(),
+            onClickDate:dateChanged,
+            highlightSelectedWeekday:false,
+            highlightSelectedWeek:false
+        });
+      });
+
+</script>
+}

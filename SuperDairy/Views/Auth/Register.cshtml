@@ -1,0 +1,69 @@
+﻿@model SuperDairy.Models.Auth.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Registration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div >
+    <div class="d-flex justify-content-center ">
+        @using (Html.BeginForm("Register", "Auth", FormMethod.Post,new {@class= "w-md-50 w-sm-100" }))
+        {
+                <h1 class="text-center">Register Here</h1>
+                <hr />
+                <div class="form-group">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+
+                        @Html.LabelFor(m => m.Name, new { @class = "form-label" })
+                        <div class="d-flex justify-content-between">
+
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @placeholder = "Name" })
+
+
+                        </div>
+                        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.ContactNo, new { @class = "form-label" })
+
+                        @Html.TextBoxFor(m => m.ContactNo, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.ContactNo, "", new { @class = "text-danger" })
+
+
+                    </div>
+
+
+
+                    <div class="mb-3">
+
+                        @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="mb-3">
+
+                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "form-label" })
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <input type="submit" value="Sign Up" class="btn btn-primary" />
+
+                        <a class="pt-2" asp-action="Login">Already Registered, Sign In here</a>
+                    </div>
+                </div>
+            @*</form>*@
+        }
+        </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
