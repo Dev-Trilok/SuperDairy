@@ -12,12 +12,15 @@ namespace Core
     public enum EmailStatus { PENDING, SENT, OTHER }
     public enum TransactionType { DEBIT, CREDIT }
 
-    public enum MilkType { BUFFALO, COW, GOAT, OTHER}
+    public enum MilkType {
+        
+        BUFFALO, COW, OTHER
+    }
     
     public enum TimeBatch { MORNING , EVENING }
     
     
-
+    public enum MilkCollectStatus { COLLECTED, DISCARDED};
 
     public enum OrderStatus
     {

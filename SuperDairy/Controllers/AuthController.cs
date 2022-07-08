@@ -25,7 +25,7 @@ namespace SuperDairy.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = Core.Model.User.UserLogin(Common.GetConnectionString(), model.Username, model.Password);
+                var user = Core.Model.User.UserLogin(Common.ConnectionString, model.Username, model.Password);
                 if (user != null)
                 {
                     ClaimIdentity(user);
@@ -69,7 +69,7 @@ namespace SuperDairy.Controllers
         {
             if (ModelState.IsValid)
             {
-                var con = Models.Common.GetConnectionString();
+                var con = Models.Common.ConnectionString;
                 if (!Core.Model.User.CheckPhoneExists(con, model.ContactNo))
                 {
                     //Json mod = 
@@ -94,6 +94,12 @@ namespace SuperDairy.Controllers
                 }
             }
             return View(model);
+        }
+
+        public ActionResult Logout()
+        {
+            HttpContext.SignOutAsync().Wait();
+            return RedirectToAction(nameof(Login));
         }
     }
 }

@@ -35,12 +35,34 @@ namespace Core.Model
             connection.Close();
 
         }
+
+        public Rate(SqlDataReader reader)
+        {
+            Load(reader);
+        }
+
+        public static List<Rate> GetRates(string connectionString)
+        {
+            List<Rate> rates = new();
+            SqlConnection connection = new SqlConnection(connectionString);
+            string sql = "select * from Rate";
+            SqlCommand command = new SqlCommand(sql, connection);
+            connection.Open();
+            SqlDataReader reader = command.ExecuteReader();
+            while(reader.Read())
+            {
+               rates.Add( new Rate(reader));
+            }
+            connection.Close();
+            return rates;
+
+        }
         public void Load(SqlDataReader reader)
         {
             Id = reader.GetInt32(0);
             MilkType = (MilkType)reader.GetInt32(1);
-            Fat = reader.GetFloat(2);
-            Price = reader.GetFloat(3);
+            Fat = (float)reader.GetDouble(2);
+            Price = (float)reader.GetDouble(3);
         }
 
         public bool Save(string connectionString,bool isNew=false)

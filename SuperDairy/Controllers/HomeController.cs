@@ -3,6 +3,9 @@ using SuperDairy.Models;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Core;
+using System.Security.Claims;
+using Core.Model;
+
 namespace SuperDairy.Controllers
 { 
     [Authorize("LoggedIn")]
@@ -17,6 +20,17 @@ namespace SuperDairy.Controllers
 
         public IActionResult Index()
         {
+
+            if (User.FindFirstValue(ClaimTypes.System) != null)
+                return RedirectToAction("Index", "Admin");
+            return View();
+        }
+
+        public ActionResult GetHistory(DateTime date)
+        {
+            int userId = Int32.Parse(User.Claims.Where(u => u.Type == ClaimTypes.NameIdentifier).First()?.Value ?? "0");
+            List<MilkInventory> list = MilkInventory.GetInventoryList(userId,date,SuperDairy.Models.Common.ConnectionString);
+            ViewBag.Inventories = list;
             return View();
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

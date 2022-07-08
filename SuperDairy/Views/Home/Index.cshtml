@@ -5,7 +5,10 @@
 
 <div class="row">
     <div class="calendar-container col-12 col-md-4"></div>
-    <div class="col-12 col-md-8"></div>
+    <div class="d-none d-md-block col-md-2"></div>
+    <div id="container" class="col-12 col-md-6">
+
+    </div>
 </div>
 
 
@@ -20,10 +23,18 @@
 
 <script>
       let calendar=null;
-      function dateChanged(date){
-          console.log(date)
+      function dateChanged(d){
+            console.log(d);
+          $.ajax('@Url.Action("GetHistory","Home")',{
+                data:{date:new Date(d).toDateString()},
+                method:'POST',
+                success:(data)=>{
+                    $("#container").html(data);
+                }
+            });
+          //$("#container").load('@Url.Action("GetHistory","Home")',JSON.stringify({date:date}));
            $('.calendar-container').updateCalendarOptions({
-                date: date
+                date: d
             });
       }
 
@@ -32,8 +43,10 @@
             date:new Date(),
             onClickDate:dateChanged,
             highlightSelectedWeekday:false,
-            highlightSelectedWeek:false
+            highlightSelectedWeek:false,
+            max:new Date(),
         });
+        $("#container").load('@Url.Action("GetHistory","Home",new {date=DateTime.Now.AddDays(-1)})');
       });
 
 </script>
