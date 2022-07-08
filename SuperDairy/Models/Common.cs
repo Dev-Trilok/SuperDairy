@@ -1,16 +1,19 @@
-﻿namespace SuperDairy.Models
+﻿using Microsoft.AspNetCore.Mvc;
+namespace SuperDairy.Models
 {
     public class Common
     {
         private static string connstring="";
-        public static string GetConnectionString()
+        public static string ConnectionString 
         {
-            if (connstring != "")
+            get {
+                if (connstring != "")
+                    return connstring;
+                var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: false);
+                IConfiguration configuration = builder.Build();
+                Common.connstring = configuration.GetValue<string>("ConnectionStrings:value");
                 return connstring;
-            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: false);
-            IConfiguration configuration = builder.Build();
-            Common.connstring = configuration.GetValue<string>("ConnectionStrings:value");
-            return connstring;
+            }
         }
     }
 }

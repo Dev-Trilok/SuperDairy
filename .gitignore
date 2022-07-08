@@ -32,3 +32,8 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+
+
+# sql
+SuperDairy/SuperDairy.mdf
+SuperDairy/SuperDairy_log.ldf

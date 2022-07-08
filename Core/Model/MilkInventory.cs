@@ -4,29 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using System.ComponentModel.DataAnnotations;
 namespace Core.Model
 {
     public class MilkInventory
     {
+        #region Fields
 
-        public Guid Id { get; set; }
-        public int UserId{ get; set; }
-        public DateTime Date{ get; set; }
-        public TimeBatch Batch{ get; set; }
-        public MilkType MilkType{ get; set; }
-        public float Fat{ get; set; }
+        public Guid Id { get; set; } = Guid.Empty;
+        [Display(Name ="User")]
+        public int UserId { get; set; }
+        public DateTime Date { get; set; }
+        public TimeBatch Batch { get; set; }
+        public MilkType MilkType { get; set; }
+        public float Fat { get; set; }
         public float Price { get; set; }
-        public float Quantity{ get; set; }
-        public float Amount{ get; set; }
-        public string Comment{ get; set; }
-        public int Status{ get; set; }
-        public DateTime CreatedOn{ get; set; }
-        public int CreatedBy{ get; set; }
-        public DateTime UpdatedOn{ get; set; }
+        public float Quantity { get; set; }
+        public float Amount { get; set; }
+        
+        public string Comment { get; set; }
+        public MilkCollectStatus Status { get; set; } =MilkCollectStatus.COLLECTED;
+        public DateTime CreatedOn { get; set; } = DateTime.Now;
+        public int CreatedBy { get; set; }
+        public DateTime UpdatedOn { get; set; } = DateTime.Now;
         public int UpdatedBy { get; set; }
+        #endregion
 
-        public MilkInventory(int userId, DateTime date, TimeBatch batch, MilkType milkType, float fat, float price, float quantity, float amount, string comment, int status, DateTime createdOn, int createdBy, DateTime updatedOn, int updatedBy)
-        { 
+        public MilkInventory(int userId, DateTime date, TimeBatch batch, MilkType milkType, float fat, float price, float quantity, float amount, string comment, MilkCollectStatus status, DateTime createdOn, int createdBy, DateTime updatedOn, int updatedBy)
+        {
             UserId = userId;
             Date = date;
             Batch = batch;
@@ -42,8 +47,12 @@ namespace Core.Model
             UpdatedOn = updatedOn;
             UpdatedBy = updatedBy;
         }
-
-        public MilkInventory(Guid id,string connectionString)
+        
+        public MilkInventory(SqlDataReader reader)
+        {
+            Load(reader);
+        }
+        public MilkInventory(Guid id, string connectionString)
         {
             SqlConnection connection = new SqlConnection(connectionString);
             string sql = "Select * from MilkInventory where Id=@Id";
@@ -63,19 +72,19 @@ namespace Core.Model
             Date = reader.GetDateTime(2);
             Batch = (TimeBatch)reader.GetInt32(3);
             MilkType = (MilkType)reader.GetInt32(4);
-            Fat = reader.GetFloat(5);
-            Price = reader.GetFloat(6);
-            Quantity = reader.GetFloat(7);
-            Amount = reader.GetFloat(8);
+            Fat = (float)reader.GetDouble(5);
+            Price = (float)reader.GetDouble(6);
+            Quantity = (float)reader.GetDouble(7);
+            Amount = (float)reader.GetDouble(8);
             Comment = reader.GetString(9);
-            Status = reader.GetInt32(10);
+            Status = (MilkCollectStatus)reader.GetInt32(10);
             CreatedOn = reader.GetDateTime(11);
             CreatedBy = reader.GetInt32(12);
             UpdatedOn = reader.GetDateTime(13);
             UpdatedBy = reader.GetInt32(14);
         }
-        
-        public bool Save(string connectionString,bool isNew = false)
+
+        public bool Save(string connectionString, bool isNew = false)
         {
             SqlConnection connection = new SqlConnection(connectionString);
             string sql = "";
@@ -88,7 +97,7 @@ namespace Core.Model
                 sql = "Update MilkInventory set UserId=@UserId,Date=@Date,Batch=@Batch,MilkType=@MilkType,Fat=@Fat,Price=@Price,Quantity=@Quantity,Amount=@Amount,Comment=@Comment,Status=@Status,CreatedOn=@CreatedOn,CreatedBy=@CreatedBy,UpdatedOn=@UpdatedOn,UpdatedBy=@UpdatedBy where Id=@Id";
             }
             SqlCommand command = new SqlCommand(sql, connection);
-            if (!isNew | Id != Guid.Empty)
+            if (!isNew || Id != Guid.Empty)
                 command.Parameters.AddWithValue("@Id", Id);
             command.Parameters.AddWithValue("@UserId", UserId);
             command.Parameters.AddWithValue("@Date", Date);
@@ -109,5 +118,33 @@ namespace Core.Model
             connection.Close();
             return rowsAffected > 0;
         }
+
+        public static List<MilkInventory> GetInventoryList(int userId,DateTime date,string connectionString)
+        {
+            List<MilkInventory> inventories = new List<MilkInventory>();
+            SqlConnection connection = new SqlConnection(connectionString);
+            string sql = "select * from MilkInventory where Cast(Date as date) = Cast(@Date as date) and UserId=@UserId";
+            SqlCommand cmd = new SqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@Date", date);
+            cmd.Parameters.AddWithValue("@UserId", userId);
+            try
+            {
+                connection.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    inventories.Add(new MilkInventory(reader));
+                }
+            }
+            catch (SqlException e){
+                Console.WriteLine(e.Errors);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return inventories;
+        }
+
     }
 }

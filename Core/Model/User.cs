@@ -114,11 +114,16 @@ namespace Core.Model
             }
         }
 
-        public static List<User> GetUsers(string Conn, int Role = 1)
+        public static List<User> GetUsers(string Conn, int Role = -1)
         {
             SqlConnection con = new SqlConnection(Conn);
             con.Open();
-            SqlCommand cmd = new SqlCommand("select * from Users", con);
+            string sql;
+            if (Role != -1)
+                sql = "select * from Users where Role=" + Role;
+            else
+                sql = "select * from Users";
+            SqlCommand cmd = new SqlCommand(sql, con);
 
             cmd.CommandType = System.Data.CommandType.Text;
             //cmd.Parameters.AddWithValue("Role", Role);

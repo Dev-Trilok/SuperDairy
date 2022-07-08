@@ -11,14 +11,14 @@ namespace SuperDairy.Controllers
         // GET: UsersController
         public ActionResult Index()
         {
-            var list=Core.Model.User.GetUsers(Common.GetConnectionString());
+            var list=Core.Model.User.GetUsers(Common.ConnectionString);
             return View(model:list);
         }
 
         // GET: UsersController/Details/5
         public ActionResult Details(int id)
         {
-            Core.Model.User user = new Core.Model.User(id, Common.GetConnectionString());
+            Core.Model.User user = new Core.Model.User(id, Common.ConnectionString);
             return View(user);
         }
 
@@ -38,7 +38,7 @@ namespace SuperDairy.Controllers
             {
                 user.CreatedDate = DateTime.Now;
                 user.LastModified= DateTime.Now;
-                user.Save(Common.GetConnectionString());
+                user.Save(Common.ConnectionString);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -50,7 +50,7 @@ namespace SuperDairy.Controllers
         // GET: UsersController/Edit/5
         public ActionResult Edit(int id)
         {
-            User user = new User(id, Common.GetConnectionString());
+            User user = new User(id, Common.ConnectionString);
             return View(user);
         }
 
@@ -63,7 +63,7 @@ namespace SuperDairy.Controllers
             {
                 //user.Id = id;
                 user.LastModified = DateTime.Now;
-                user.Save(Common.GetConnectionString());
+                user.Save(Common.ConnectionString);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -78,7 +78,7 @@ namespace SuperDairy.Controllers
         {
             try
             {
-                Core.Model.User.DeleteUser(id,Common.GetConnectionString());
+                Core.Model.User.DeleteUser(id,Common.ConnectionString);
                 return RedirectToAction(nameof(Index));
             }
             catch
