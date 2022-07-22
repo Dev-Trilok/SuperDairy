@@ -7,7 +7,11 @@
     <div class="calendar-container col-12 col-md-4"></div>
     <div class="d-none d-md-block col-md-2"></div>
     <div id="container" class="col-12 col-md-6">
-
+        <div class="m-5 p-5 text-center">
+            <div class="spinner-grow text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -22,32 +26,39 @@
 <script src="~/lib/calendar/calendar.js"></script>
 
 <script>
-      let calendar=null;
-      function dateChanged(d){
-            console.log(d);
-          $.ajax('@Url.Action("GetHistory","Home")',{
-                data:{date:new Date(d).toDateString()},
-                method:'POST',
-                success:(data)=>{
-                    $("#container").html(data);
-                }
-            });
-          //$("#container").load('@Url.Action("GetHistory","Home")',JSON.stringify({date:date}));
-           $('.calendar-container').updateCalendarOptions({
-                date: d
-            });
-      }
+    let calendar=null;
+    function dateChanged(d){
+        $("#container").html(`
+              <div class="m-5 p-5 text-center">
+                  <div class="spinner-grow text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+              </div>
+         `);
 
-      $(function(){
-      calendar=  $('.calendar-container').calendar({
-            date:new Date(),
-            onClickDate:dateChanged,
-            highlightSelectedWeekday:false,
-            highlightSelectedWeek:false,
-            max:new Date(),
-        });
-        $("#container").load('@Url.Action("GetHistory","Home",new {date=DateTime.Now.AddDays(-1)})');
+        $.ajax('@Url.Action("GetHistory","Home")',{
+              data:{date:new Date(d).toDateString()},
+              method:'POST',
+              success:(data)=>{
+                  $("#container").html(data);
+              }
+          });
+        //$("#container").load('@Url.Action("GetHistory","Home")',JSON.stringify({date:date}));
+         $('.calendar-container').updateCalendarOptions({
+              date: d
+          });
+    }
+
+    $(function(){
+    calendar=  $('.calendar-container').calendar({
+          date:new Date(),
+          onClickDate:dateChanged,
+          highlightSelectedWeekday:false,
+          highlightSelectedWeek:false,
+          max:new Date(),
       });
+      $("#container").load('@Url.Action("GetHistory","Home",new {date=DateTime.Now})');
+    });
 
 </script>
 }

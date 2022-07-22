@@ -30,9 +30,17 @@ namespace SuperDairy.Controllers
         {
             int userId = Int32.Parse(User.Claims.Where(u => u.Type == ClaimTypes.NameIdentifier).First()?.Value ?? "0");
             List<MilkInventory> list = MilkInventory.GetInventoryList(userId,date,SuperDairy.Models.Common.ConnectionString);
-            ViewBag.Inventories = list;
+            ViewData["Inventories"] = list;
+            ViewData["Date"] = date;
             return View();
         }
+
+        public ActionResult GetBill(DateTime startDate, DateTime endDate)
+        {
+
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

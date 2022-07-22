@@ -32,5 +32,12 @@ namespace SuperDairy.Controllers
             inventory.Save(Common.ConnectionString, isNew :true);
             return RedirectToAction(nameof(CollectMilk));
         }
+        public ActionResult Bill()
+        {
+            List<Core.Model.User> users = Core.Model.User.GetUsers(Common.ConnectionString, (int)Core.UserRole.SUPPLIER).ToList();
+            ViewData["Users"] = users;
+            
+            return View();
+        }
     }
 }
