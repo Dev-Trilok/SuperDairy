@@ -1,6 +1,6 @@
 ﻿@model SuperDairy.Models.Admin.CollectMilkModelView;
 @{
-    ViewData["Title"] = "CollectMilk";
+    ViewData["Title"] = "Generate Milk";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <h1>CollectMilk</h1>
@@ -23,7 +23,7 @@
                 <label asp-for="UserId" class="control-label"></label>
                 <div class="row g-0">
                     <div class="col-9">
-                        <select class="user-id-selector form-select" onchange="setUserId(event)" data-placeholder="Select User">
+                        <select class="user-id-selector form-select" tabindex="1" onchange="setUserId(event)" data-placeholder="Select User">
                             <option></option>
                             @foreach (var user in (ViewData["Users"] as List<Core.Model.User>))
                             {

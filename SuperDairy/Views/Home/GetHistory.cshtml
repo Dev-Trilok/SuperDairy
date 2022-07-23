@@ -1,11 +1,15 @@
 ﻿@using Core.Model;
 @{
     Layout = null;
-    List<MilkInventory> list = ViewBag.Inventories;
+    List<MilkInventory> list = ViewData["Inventories"] as List<MilkInventory>??new List<MilkInventory>();
     List<MilkInventory> buffaloMilk = list.Where(E => E.MilkType == Core.MilkType.BUFFALO).ToList();
     List<MilkInventory> cowMilk = list.Where(E => E.MilkType == Core.MilkType.COW).ToList();
     List<MilkInventory> otherMilk = list.Where(E => E.MilkType == Core.MilkType.OTHER).ToList();
+    DateTime date = (DateTime)( ViewData["Date"] ?? DateTime.Now);
 }
+
+<h3 class="my-3">@date.ToString("dddd, dd MMMM yyyy")</h3>
+
 
 <ul class="nav nav-tabs" id="milkType" role="tablist">
     @if (buffaloMilk.Count > 0)
@@ -17,153 +21,186 @@
     @if (cowMilk.Count > 0)
     {
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="cow-tab" data-bs-toggle="tab" data-bs-target="#cow" type="button" role="tab" aria-controls="cow" aria-selected="@(buffaloMilk.Count>0?"false":"true")">Cow Milk</button>
+            <button class="nav-link @(buffaloMilk.Count>0?"":"active")" id="cow-tab" data-bs-toggle="tab" data-bs-target="#cow" type="button" role="tab" aria-controls="cow" aria-selected="@(buffaloMilk.Count>0?"false":"true")">Cow Milk</button>
         </li>
     }
     @if (otherMilk.Count > 0)
     {
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="other-tab" data-bs-toggle="tab" data-bs-target="#other" type="button" role="tab" aria-controls="other" aria-selected="@(otherMilk.Count>0?"false":"true")">Other Milks</button>
+            <button class="nav-link @(cowMilk.Count>0?"":"active")" id="other-tab" data-bs-toggle="tab" data-bs-target="#other" type="button" role="tab" aria-controls="other" aria-selected="@( cowMilk.Count>0?"false":"true")">Other Milks</button>
         </li>
     }
 </ul>
 <div class="tab-content" id="milkTypeContent">
-    <div class="tab-pane fade show active" id="buffalo" role="tabpanel" aria-labelledby="buffalo-tab">
-        <table class="table table-striped text-center mt-4">
-            <tbody>
-                <tr >
-                    <th>Fat</th>
-                    <th>Rate</th>
-                    <th>Quantity</th>
-                    <th class="table-active">Amount</th>
-                </tr>
-            @*</tbody>
-            <tbody>*@
-                <tr><td class="float-start"  colspan="4">Morning</td></tr>
-                @foreach (MilkInventory item in buffaloMilk.Where(E=>E.Batch==Core.TimeBatch.MORNING))
-                {
+    @if (buffaloMilk.Count > 0)
+    {
+        <div class="tab-pane fade show active" id="buffalo" role="tabpanel" aria-labelledby="buffalo-tab">
+            <table class="table table-striped text-center mt-4">
+                <tbody>
                     <tr>
-                        <td>@item.Fat</td>
-                        <td>@item.Price</td>
-                        <td>@item.Quantity</td>
-                        <td class="table-active">@item.Amount</td>
+                        <th>Fat</th>
+                        <th>Rate</th>
+                        <th>Quantity</th>
+                        <th class="table-active">Amount</th>
                     </tr>
-                }
-                @if(!buffaloMilk.Where(E=>E.Batch==Core.TimeBatch.MORNING).Any()){
-                    <tr><td colspan="4">Nothing Here...</td></tr>
-                }
-                <tr><td class="float-start" colspan="4">Evening</td></tr>
-                @foreach (MilkInventory item in buffaloMilk.Where(E=>E.Batch==Core.TimeBatch.EVENING))
-                {
+                    @*</tbody>
+                        <tbody>*@
+                    <tr><td class="float-start" colspan="4">Morning</td></tr>
+                    @foreach (MilkInventory item in buffaloMilk.Where(E => E.Batch == Core.TimeBatch.MORNING))
+                    {
+                        <tr>
+                            <td>@item.Fat</td>
+                            <td>@item.Price</td>
+                            <td>@item.Quantity</td>
+                            <td class="table-active">@item.Amount</td>
+                        </tr>
+                    }
+                    @if (!buffaloMilk.Where(E => E.Batch == Core.TimeBatch.MORNING).Any())
+                    {
+                        <tr><td colspan="4">Nothing Here...</td></tr>
+                    }
+                    <tr><td class="float-start" colspan="4">Evening</td></tr>
+                    @foreach (MilkInventory item in buffaloMilk.Where(E => E.Batch == Core.TimeBatch.EVENING))
+                    {
+                        <tr>
+                            <td>@item.Fat</td>
+                            <td>@item.Price</td>
+                            <td>@item.Quantity</td>
+                            <td class="table-active">@item.Amount</td>
+                        </tr>
+                    }
+                    @if (!buffaloMilk.Where(E => E.Batch == Core.TimeBatch.EVENING).Any())
+                    {
+                        <tr><td colspan="4">Nothing Here...</td></tr>
+                    }
+                </tbody>
+                <tfoot>
                     <tr>
-                        <td>@item.Fat</td>
-                        <td>@item.Price</td>
-                        <td>@item.Quantity</td>
-                        <td class="table-active">@item.Amount</td>
+                        <th colspan="3">Amount</th>
+                        <th class="table-active">@buffaloMilk.Sum(e=>e.Amount)</th>
                     </tr>
-                }
-                @if(!buffaloMilk.Where(E=>E.Batch==Core.TimeBatch.EVENING).Any()){
-                    <tr><td colspan="4">Nothing Here...</td></tr>
-                }
-            </tbody>
-            <tfoot>
-                <tr >
-                    <th colspan="3">Amount</th>
-                    <th class="table-active">@buffaloMilk.Sum(e=>e.Amount)</th>
-                </tr>
-            </tfoot>
-        </table>
+                </tfoot>
+            </table>
+        </div>
+    }
+    @if (cowMilk.Count > 0)
+    {
+        <div class="tab-pane fade @(buffaloMilk.Count!=0?"":"show active")" id="cow" role="tabpanel" aria-labelledby="cow-tab">
+            <table class="table table-striped text-center mt-4">
+                <tbody>
+                    <tr>
+                        <th>Fat</th>
+                        <th>Rate</th>
+                        <th>Quantity</th>
+                        <th class="table-active">Amount</th>
+                    </tr>
+                    @*</tbody>
+                        <tbody>*@
+                    <tr><td class="float-start" colspan="4">Morning</td></tr>
+                    @foreach (MilkInventory item in cowMilk.Where(E => E.Batch == Core.TimeBatch.MORNING))
+                    {
+                        <tr>
+                            <td>@item.Fat</td>
+                            <td>@item.Price</td>
+                            <td>@item.Quantity</td>
+                            <td class="table-active">@item.Amount</td>
+                        </tr>
+                    }
+                    @if (!cowMilk.Where(E => E.Batch == Core.TimeBatch.MORNING).Any())
+                    {
+                        <tr><td colspan="4">Nothing Here...</td></tr>
+                    }
+                    <tr><td class="float-start" colspan="4">Evening</td></tr>
+                    @foreach (MilkInventory item in cowMilk.Where(E => E.Batch == Core.TimeBatch.EVENING))
+                    {
+                        <tr>
+                            <td>@item.Fat</td>
+                            <td>@item.Price</td>
+                            <td>@item.Quantity</td>
+                            <td class="table-active">@item.Amount</td>
+                        </tr>
+                    }
+                    @if (!cowMilk.Where(E => E.Batch == Core.TimeBatch.EVENING).Any())
+                    {
+                        <tr><td colspan="4">Nothing Here...</td></tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3">Amount</th>
+                        <th class="table-active">@cowMilk.Sum(e=>e.Amount)</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    }
+    @if (otherMilk.Count > 0)
+    {
+        <div class="tab-pane fade @(cowMilk.Count>0?"":"show active")" id="other" role="tabpanel" aria-labelledby="other-tab">
+            <table class="table table-striped text-center mt-4">
+                <tbody>
+                    <tr>
+                        <th>Fat</th>
+                        <th>Rate</th>
+                        <th>Quantity</th>
+                        <th class="table-active">Amount</th>
+                    </tr>
+                    @*</tbody>
+                        <tbody>*@
+                    <tr><td class="float-start" colspan="4">Morning</td></tr>
+                    @foreach (MilkInventory item in otherMilk.Where(E => E.Batch == Core.TimeBatch.MORNING))
+                    {
+                        <tr>
+                            <td>@item.Fat</td>
+                            <td>@item.Price</td>
+                            <td>@item.Quantity</td>
+                            <td class="table-active">@item.Amount</td>
+                        </tr>
+                    }
+                    @if (!otherMilk.Where(E => E.Batch == Core.TimeBatch.MORNING).Any())
+                    {
+                        <tr><td colspan="4">Nothing Here...</td></tr>
+                    }
+                    <tr><td class="float-start" colspan="4">Evening</td></tr>
+                    @foreach (MilkInventory item in otherMilk.Where(E => E.Batch == Core.TimeBatch.EVENING))
+                    {
+                        <tr>
+                            <td>@item.Fat</td>
+                            <td>@item.Price</td>
+                            <td>@item.Quantity</td>
+                            <td class="table-active">@item.Amount</td>
+                        </tr>
+                    }
+                    @if (!otherMilk.Where(E => E.Batch == Core.TimeBatch.EVENING).Any())
+                    {
+                        <tr><td colspan="4">Nothing Here...</td></tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3">Amount</th>
+                        <th class="table-active">@otherMilk.Sum(e=>e.Amount)</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    }
+</div>
+@if (list.Count == 0)
+{
+    <div class="m-5 p-5 text-center">
+        <h5>Nothing Here...</h5>
     </div>
-    <div class="tab-pane fade" id="cow" role="tabpanel" aria-labelledby="cow-tab">
-         <table class="table table-striped text-center mt-4">
-            <tbody>
-                <tr >
-                    <th>Fat</th>
-                    <th>Rate</th>
-                    <th>Quantity</th>
-                    <th class="table-active">Amount</th>
-                </tr>
-            @*</tbody>
-            <tbody>*@
-                <tr><td class="float-start"  colspan="4">Morning</td></tr>
-                @foreach (MilkInventory item in cowMilk.Where(E=>E.Batch==Core.TimeBatch.MORNING))
-                {
-                    <tr>
-                        <td>@item.Fat</td>
-                        <td>@item.Price</td>
-                        <td>@item.Quantity</td>
-                        <td class="table-active">@item.Amount</td>
-                    </tr>
-                }
-                @if(!cowMilk.Where(E=>E.Batch==Core.TimeBatch.MORNING).Any()){
-                    <tr><td colspan="4">Nothing Here...</td></tr>
-                }
-                <tr><td class="float-start" colspan="4">Evening</td></tr>
-                @foreach (MilkInventory item in cowMilk.Where(E=>E.Batch==Core.TimeBatch.EVENING))
-                {
-                    <tr>
-                        <td>@item.Fat</td>
-                        <td>@item.Price</td>
-                        <td>@item.Quantity</td>
-                        <td class="table-active">@item.Amount</td>
-                    </tr>
-                }
-                @if(!cowMilk.Where(E=>E.Batch==Core.TimeBatch.EVENING).Any()){
-                    <tr><td colspan="4">Nothing Here...</td></tr>
-                }
-            </tbody>
-            <tfoot>
-                <tr >
-                    <th colspan="3">Amount</th>
-                    <th class="table-active">@cowMilk.Sum(e=>e.Amount)</th>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-    <div class="tab-pane fade" id="other" role="tabpanel" aria-labelledby="other-tab">
-        <table class="table table-striped text-center mt-4">
-            <tbody>
-                <tr >
-                    <th>Fat</th>
-                    <th>Rate</th>
-                    <th>Quantity</th>
-                    <th class="table-active">Amount</th>
-                </tr>
-            @*</tbody>
-            <tbody>*@
-                <tr><td class="float-start"  colspan="4">Morning</td></tr>
-                @foreach (MilkInventory item in otherMilk.Where(E=>E.Batch==Core.TimeBatch.MORNING))
-                {
-                    <tr>
-                        <td>@item.Fat</td>
-                        <td>@item.Price</td>
-                        <td>@item.Quantity</td>
-                        <td class="table-active">@item.Amount</td>
-                    </tr>
-                }
-                 @if(!otherMilk.Where(E=>E.Batch==Core.TimeBatch.MORNING).Any()){
-                    <tr><td colspan="4">Nothing Here...</td></tr>
-                }
-                <tr><td class="float-start" colspan="4">Evening</td></tr>
-                @foreach (MilkInventory item in otherMilk.Where(E=>E.Batch==Core.TimeBatch.EVENING))
-                {
-                    <tr>
-                        <td>@item.Fat</td>
-                        <td>@item.Price</td>
-                        <td>@item.Quantity</td>
-                        <td class="table-active">@item.Amount</td>
-                    </tr>
-                }
-                @if(!otherMilk.Where(E=>E.Batch==Core.TimeBatch.EVENING).Any()){
-                    <tr><td colspan="4">Nothing Here...</td></tr>
-                }
-            </tbody>
-            <tfoot>
-                <tr >
-                    <th colspan="3">Amount</th>
-                    <th class="table-active">@otherMilk.Sum(e=>e.Amount)</th>
-                </tr>
-            </tfoot>
-        </table>
+}
+
+<div class="row mt-2">
+    <div class="col-4 input-group mb-3">
+        <div class="input-group-prepand" style="width:60%;background-color:transparent;">
+            <span class="input-group-text" style="font-size:24px;font-weight:700;text-align:end;">Total Amount : </span>
+        </div>
+        <input value="@list.Sum(e=>e.Amount)" readonly type="text" class="form-control" style="font-size:24px;font-weight:700;text-align:end">
+        <div class="input-group-append">
+            <span class="input-group-text" style="font-size:24px;font-weight:700;text-align:end">₹</span>
+        </div>
     </div>
 </div>

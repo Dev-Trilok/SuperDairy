@@ -145,6 +145,32 @@ namespace Core.Model
             }
             return inventories;
         }
+        public static List<MilkInventory> GetInventoryList(int userId,DateTime startDate,DateTime endDate,string connectionString)
+        {
+            List<MilkInventory> inventories=new List<MilkInventory>();
+            SqlConnection conn = new SqlConnection(connectionString);
+            string sql = "select * from MilkInventory where Cast(Date as date)<= Cast(@EndDate as Date) and UserId=@UserId";
+            SqlCommand command = new SqlCommand(sql, conn);
+            command.Parameters.AddWithValue("@EndDate",endDate);
+            command.Parameters.AddWithValue("@UserId",userId);
+            try
+            {
+                conn.Open();
+                SqlDataReader reader=command.ExecuteReader();
+                while (reader.Read())
+                    inventories.Add(new MilkInventory(reader));
+            }
+            catch
+            {
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+
+            return inventories;
+        }
 
     }
 }

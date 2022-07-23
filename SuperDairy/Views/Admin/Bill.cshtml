@@ -1,0 +1,67 @@
+﻿@model Core.Model.Bill
+@{
+    ViewData["Title"] = "Generate Bill";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-lg-6">
+    <div class="mb-3">
+        <label asp-for="UserId" class="control-label">User Id :</label>
+        <div class="row g-0">
+            <div class="col-9">
+                <select class="user-id-selector form-select" tabindex="1" onchange="setUserId(event)" data-placeholder="Select User">
+                    <option></option>
+                    @foreach (var user in (ViewData["Users"] as List<Core.Model.User>))
+                    {
+                        <option value="@user.Id">@user.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-3">
+                <input asp-for="UserId" min="100" type="number" placeholder="User Id" onchange="changeUser(event)"
+                       tabindex="1" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="day" class="control-label">Date :</label>
+        <div class="row">
+            <div class="col-4">
+                <select id="day" class="form-select" aria-label="Select Day">
+                    <option selected>Select Day</option>
+                    <option value="1">01</option>
+                    <option value="11">11</option>
+                    <option value="21">21</option>
+                </select>
+            </div>
+            <div class="col-8">
+                <input type="month" class="form-control" id="month">
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <div class="btn btn-success" onclick="generateBill()">Generate</div>
+    </div>
+</div>
+
+@section Scripts{
+<script>
+    function changeUser(e) {
+        $(".user-id-selector").val(e.currentTarget.value).trigger('change');
+    }
+    function setUserId(event){
+        $("#UserId").val(event.currentTarget.value);
+    }
+    function generateBill(){
+        let userId=$("#UserId").val();
+        let day=$("#day").val();
+        let month=$("#month").val();
+        if(!day){
+            $("#day").focus();
+
+        }
+        let date=new Date(month);
+        date.setDate(day);
+        console.log(date);
+    }
+</script>
+}
