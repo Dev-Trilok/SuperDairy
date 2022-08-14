@@ -162,14 +162,14 @@ namespace Core.Model
             return result == 1;
         }
 
-        public static UserInfo? UserLogin(string Conn, string Username, string Password)
+        public static UserInfo? UserLogin(string Conn, string contactNo, string Password)
         {
             SqlConnection con = new SqlConnection(Conn);
             SqlCommand cmd = new SqlCommand();
             SqlDataReader dr;            
             con.Open();
             cmd.Connection = con;
-            cmd.CommandText = "select * from Users where contactNo='" + Username + "' AND Password='" + Password + "'";
+            cmd.CommandText = "select * from Users where contactNo='" + contactNo + "' AND Password='" + Password + "'";
             dr = cmd.ExecuteReader();
             if (dr.Read())
             {
