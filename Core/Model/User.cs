@@ -144,6 +144,33 @@ namespace Core.Model
             con.Close();
             return list;
         }
+        public static int GetUserCount(string Conn, int Role = -1)
+        {
+            SqlConnection con = new SqlConnection(Conn);
+            con.Open();
+            string sql;
+            if (Role != -1)
+                sql = "select count (id) from Users where Role=" + Role;
+            else
+                sql = "select * from Users";
+            SqlCommand cmd = new SqlCommand(sql, con);
+            cmd.CommandType = System.Data.CommandType.Text;
+            Int32 UserCount = 0;
+            try
+            {
+                 UserCount = (Int32)cmd.ExecuteScalar();
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+            finally
+            {
+                con.Close();
+            }
+            return UserCount;
+
+        }
         public static bool CheckPhoneExists(string Conn, string ContactNo)
         {
             SqlConnection con = new SqlConnection(Conn);

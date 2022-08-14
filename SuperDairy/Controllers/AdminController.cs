@@ -13,6 +13,9 @@ namespace SuperDairy.Controllers
     {
         public IActionResult Index()
         {
+            int UserCount= Core.Model.User.GetUserCount(Common.ConnectionString, (int)Core.UserRole.SUPPLIER);
+            ViewData["UserCount"] = UserCount;
+
             return View();
         }
 
@@ -20,7 +23,7 @@ namespace SuperDairy.Controllers
         {
             List<Core.Model.User> users = Core.Model.User.GetUsers(Common.ConnectionString, (int)Core.UserRole.SUPPLIER).ToList();
             ViewData["Users"] = users;
-            List<Rate> rates = Rate.GetRates(Common.ConnectionString);
+            List<Rate> rates = Rate.GetRates(null,Common.ConnectionString);
             ViewData["Rates"] =rates;
             return View();
         }

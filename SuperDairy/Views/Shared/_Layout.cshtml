@@ -4,10 +4,17 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SuperDairy</title>
+    <title>@ViewData["Title"] - Super Dairy</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SuperDairy.styles.css" asp-append-version="true" />
+ 
+        <link rel="stylesheet" href="https://unicentric-cdn.s3.amazonaws.com/dist/bootstrap431/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://unicentric-cdn.s3.amazonaws.com/dist/kendoui/styles/kendo.common-bootstrap.min.css" />
+    <link rel="stylesheet" href="https://unicentric-cdn.s3.amazonaws.com/dist/kendoui/styles/kendo.bootstrap-v4.min.css" />
+    <link href='https://unicentric-cdn.s3.amazonaws.com/css/font-awesome/css/font-awesome.css' rel="stylesheet" type="text/css" />
+
+
     @await RenderSectionAsync("Stylesheet", required: false)
 </head>
 <body>
@@ -16,7 +23,7 @@
         <header>
             <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                 <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SuperDairy</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Super Dairy</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -36,18 +43,23 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="CollectMilk">Milk Collection</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Bill">Generate Bill</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Bill">Billing</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="FatRate" asp-action="Index">Fat Rate</a>
                                 </li>
                             }
                         </ul>
                         <ul class="navbar-nav">
                             <li class="dropdown">
-                                <a class="nav-link text-link dropdown-toggle" href="#" role="button" id="profileMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link text-link dropdown-toggle" href="#" role="button" id="profileMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Hello, @User.Claims.Where(E=>E.Type == ClaimTypes.Name).First()?.Value
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="profileMenuLink">
+                                    <a class="dropdown-item" href="#" onclick="userProfile(@User.Claims.Where(E=>E.Type == ClaimTypes.NameIdentifier).First()?.Value)">Profile</a>
                                     <a class="dropdown-item" asp-controller="Auth" asp-action="Logout">Logout</a>
                                 </div>
+                                
                             </li>
                         </ul>
                     </div>
@@ -63,7 +75,7 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
+        <div class="container center">
             &copy; 2022 - Super Dairy
         </div>
     </footer>
@@ -89,4 +101,17 @@
         </div>
     </div>
 </div>
+<div class="pageLoader display-none">
+</div>
+<div id="divKendoDialog"></div>
 
+<script>
+    function saveEditUser(){
+        hideModal();
+        $("#editUser").submit();
+    }
+    function userProfile(userId){
+        let body=showModal("Edit user",saveEditUser,null);
+        $(body).load(`@Url.Action("Edit","Users")?id=${userId}`);
+    }
+</script>

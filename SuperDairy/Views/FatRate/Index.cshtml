@@ -1,0 +1,74 @@
+﻿@*@model IEnumerable<Core.Model.Rate>
+*@
+@model dynamic
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Rate</h1>
+<p>
+    <a class="btn btn-primary" href="#" onclick="newRate();">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Milk Type
+            </th>
+            <th>
+                Fat
+            </th>
+            <th>
+                Price
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (Core.Model.Rate item in Model.BuffaloRateList) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MilkType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fat)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            
+            <td>
+                <a class="btn btn-primary" href="#" onclick="editRate(@item.Id)">Edit</a> 
+                @Html.ActionLink("FatRate", "Delete", new { id=item.Id},new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<script>
+    
+      function saveNewUser(){
+        hideModal();
+        $("#createRate").submit();
+    }
+    function newRate(){
+        let body=showModal("New Rate",saveNewUser,null);
+        $(body).load('@Url.Action("Create","FatRate")');
+    }
+    
+     function saveEditRate(){
+        hideModal();
+        $("#editRate").submit();
+    }
+    function editRate(id){
+        let body=showModal("Edit Fat Rate",saveEditRate,null);
+        $(body).load(`@Url.Action("Edit","FatRate")?id=${id}`);
+    }
+</script>

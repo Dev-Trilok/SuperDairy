@@ -7,8 +7,10 @@
 
 <div>
     @*@User.Claims.Where(E=>E.Type == ClaimTypes.Role).First().Value*@
-
+    
+    <div class="d-flex justify-content-center pt-4"><h1><font>Welcome</font></h1></div>
     <div class="d-flex justify-content-center ">
+       
         @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { @class = "" }))
 
         {
@@ -39,9 +41,9 @@
             </div>
 
 
-            <div>
-                <a asp-action="Register">Don't have an account ? Contact Administrator</a>
-            </div>
+            @*<div>
+                <a asp-action="#"> Don't have an account ? Contact Administrator</a>
+            </div>*@
         }
     </div>
 

@@ -45,7 +45,7 @@
             </div>
             <div class="mt-3 form-group">
                 <label asp-for="Fat" class="control-label"></label>
-                <input asp-for="Fat" value="0" onchange="setPrice(event)" type="number" tabindex="5" class="form-control" />
+                <input asp-for="Fat" value="0" onchange="setPrice(event)" min="1" max="10" type="number" step="1.0"  tabindex="5" class="form-control" />
                 <span asp-validation-for="Fat" class="text-danger"></span>
             </div>
             <div class="mt-3 form-group">

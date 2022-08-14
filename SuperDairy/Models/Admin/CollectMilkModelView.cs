@@ -14,7 +14,10 @@ namespace SuperDairy.Models.Admin
         public DateTime Date { get; set; }
         [Display(Name = "Milk Type")]
         public MilkType MilkType { get; set; }
+        
+       
         public float Fat { get; set; }
+        [Required]
         public float Quantity { get; set; }
         public float Amount { get; set; }
         public float Price { get; set; }

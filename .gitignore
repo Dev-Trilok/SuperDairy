@@ -37,3 +37,5 @@ msbuild.wrn
 # sql
 SuperDairy/SuperDairy.mdf
 SuperDairy/SuperDairy_log.ldf
+SuperDairy/wwwroot/lib/datatables/css/dataTables.bootstrap4.css
+SuperDairy/wwwroot/lib/datatables/css/dataTables.bootstrap.min.css
