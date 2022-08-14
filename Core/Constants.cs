@@ -5,7 +5,7 @@ using System.Text;
 namespace Core
 {
     public enum UserGender { MALE, FEMALE, OTHER }
-    public enum UserRole { ADMIN,SUPPLIER}
+    public enum UserRole { ADMIN,SUPPLIER, CUSTOMERS}
 
     public enum AddressType { HOME, OFFICE, OTHER }
 
@@ -13,14 +13,11 @@ namespace Core
     public enum TransactionType { DEBIT, CREDIT }
 
     public enum MilkType {
-        
-        BUFFALO, COW, OTHER
-    }
+        BUFFALO, COW, OTHER }
     
     public enum TimeBatch { MORNING , EVENING }
     
-    
-    public enum MilkCollectStatus { COLLECTED, DISCARDED};
+    public enum MilkCollectStatus { COLLECTED, DISTRIBUTED};
 
     public enum OrderStatus
     {

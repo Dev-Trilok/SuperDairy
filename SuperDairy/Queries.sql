@@ -63,3 +63,15 @@ CREATE TABLE Bill(
 	LastModified datetime NULL,
 	LastModifiedBy int NULL,
 );
+
+CREATE TABLE [dbo].[CompanyInfo]
+(
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [Name] VARCHAR(100) NULL, 
+    [AddressGuid] UNIQUEIDENTIFIER NULL, 
+    [OwnerName] VARCHAR(50) NULL, 
+    [ConnectionString] VARCHAR(255) NULL, 
+    [Created] DATETIME NULL,
+	[LastModified] DATETIME NULL
+)
+

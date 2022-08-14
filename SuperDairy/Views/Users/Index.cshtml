@@ -5,8 +5,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<center><h1>Users</h1></center>
+@section Stylesheet{
+@*<link rel="stylesheet" type="text/css" href="~/lib/jquery.dataTables.css">*@
+<link href="~/lib/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+}
+   @* <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" charset="utf8" src="~/lib/jquery.dataTables.js"></script>
+*@
 
+@*@section Scripts
+{
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
+}*@
 <p>
     <a class="btn btn-primary" href="#" onclick="newUser();">Create New</a>
 </p>
@@ -31,9 +42,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.LastModified)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.IsActive)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -58,9 +69,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.LastModified)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
+            </td>*@
             <td>
                 <a class="btn btn-primary" href="#" onclick="editUser(@item.Id)">Edit</a> 
                 @Html.ActionLink("Delete", "Delete", new { id=item.Id},new { @class = "btn btn-danger" })
@@ -69,8 +80,43 @@
 }
     </tbody>
 </table>
+@*
+<div style="width: 500px">
+    <table id="tblEmp" cellpadding="0" cellspacing="0" border="1" style="border-collapse:collapse">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>*@
 
 <script>
+    
+//    $(document).ready(function () {
+//    $('#example').DataTable();
+//});
+//let table = new DataTable('#example', {
+//});
+//$(document).ready(function () {
+//            $("#tblEmp").DataTable({
+//                "processing": true, 
+//                "serverSide": true, // enabling server side
+//                "filter": true, //set true for enabling searching
+//                "ajax": { 
+//                    "url": "/Users/GetUser",// ajax url to load content
+//                    "type": "POST", // type of method to call
+//                    "datatype": "json" // return datatype
+//                },
+//                "columns": [
+//                    { "data": "Id", "name": "Id", "autoWidth": true }, // columns name and related settings
+//                    { "data": "Name", "name": "Name", "autoWidth": true },
+//                ]
+//            });
+//        });
+        
     function saveNewUser(){
         hideModal();
         $("#createUser").submit();

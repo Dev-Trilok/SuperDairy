@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,9 +11,19 @@ namespace Core.Model
     {
 
         public int Id { get; set; }
+       
+        [Display(Name = "Fat Type")]
         public MilkType MilkType { get; set; }
+        [Display(Name = "Fat")]
+        [Required]
         public float Fat { get; set; }
+        [Display(Name = "Price")]
+        [Required]
         public float Price { get; set; }
+        public Rate()
+        {
+
+        } 
         public Rate( MilkType milkType, float fat, float price)
         { 
             MilkType = milkType;
@@ -20,7 +31,7 @@ namespace Core.Model
             Price = price;
         }
         
-        public Rate(int id,string connectionString)
+        public Rate(int id, string connectionString)
         {
             SqlConnection connection = new SqlConnection(connectionString);
             string sql = "Select * from Rate where Id=@Id";
@@ -41,12 +52,18 @@ namespace Core.Model
             Load(reader);
         }
 
-        public static List<Rate> GetRates(string connectionString)
+        public static List<Rate> GetRates(MilkType? milkType, string connectionString)
         {
             List<Rate> rates = new();
             SqlConnection connection = new SqlConnection(connectionString);
-            string sql = "select * from Rate";
+            string sql;
+            if (milkType.HasValue)
+                sql = "select * from Rate WHERE MilkType = @milkType";
+            
+            else
+                sql = "select * from Rate";
             SqlCommand command = new SqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@milkType", milkType);
             connection.Open();
             SqlDataReader reader = command.ExecuteReader();
             while(reader.Read())
@@ -87,7 +104,6 @@ namespace Core.Model
             {
                 connection.Close();
             }
-            return false;
         }
 
 
