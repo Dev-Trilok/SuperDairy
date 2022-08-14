@@ -27,7 +27,7 @@ namespace SuperDairy.Controllers
         [HttpPost]
         public ActionResult CollectMilk(CollectMilkModelView milk)
         {
-            int userId = Int32.Parse(User.Claims.Where(u => u.Type == ClaimTypes.NameIdentifier).First()?.Value ?? "0");
+            int userId = Int32.Parse(User.Claims.First(u => u.Type == ClaimTypes.NameIdentifier)?.Value ?? "0");
             MilkInventory inventory = new MilkInventory(milk.UserId, milk.Date, milk.Batch,milk.MilkType, milk.Fat, milk.Price, milk.Quantity, milk.Amount, milk.Comment, milk.Status, DateTime.Now, userId, DateTime.Now, userId);
             inventory.Save(Common.ConnectionString, isNew :true);
             return RedirectToAction(nameof(CollectMilk));
@@ -36,7 +36,16 @@ namespace SuperDairy.Controllers
         {
             List<Core.Model.User> users = Core.Model.User.GetUsers(Common.ConnectionString, (int)Core.UserRole.SUPPLIER).ToList();
             ViewData["Users"] = users;
-            
+            return View();
+        }
+        [HttpPost]
+        public ActionResult GetBill(int userId, DateTime date)
+        {
+            var nextDate = date.AddDays(10);
+            List<MilkInventory> list=MilkInventory.GetInventoryList(userId, date,nextDate, Common.ConnectionString);
+            ViewData["InventoryList"] = list;
+            ViewData["TotalMilk"] = list.Sum(e => e.Quantity);
+            ViewData["TotalAmount"] = list.Sum(e => e.Amount);
             return View();
         }
     }
