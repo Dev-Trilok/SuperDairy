@@ -54,7 +54,6 @@ CREATE TABLE Bill(
 	UserId int NOT NULL,
 	StartDate DateTime NOT NULL,
 	EndDate DateTime NOT NULL,
-	MilkType int NOT NULL,
 	Quantity float NOT NULL DEFAULT 0.0,
 	TotalAmount float NOT NULL,
 	IsPaid bit,

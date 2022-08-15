@@ -149,8 +149,9 @@ namespace Core.Model
         {
             List<MilkInventory> inventories=new List<MilkInventory>();
             SqlConnection conn = new SqlConnection(connectionString);
-            string sql = "select * from MilkInventory where Cast(Date as date)<= Cast(@EndDate as Date) and UserId=@UserId";
+            string sql = "select * from MilkInventory where UserId=@UserId and Cast(Date as date)>=Cast(@StartDate as Date) and Cast(Date as date)<Cast(@EndDate as Date) order by Date";
             SqlCommand command = new SqlCommand(sql, conn);
+            command.Parameters.AddWithValue("@StartDate", startDate);
             command.Parameters.AddWithValue("@EndDate",endDate);
             command.Parameters.AddWithValue("@UserId",userId);
             try

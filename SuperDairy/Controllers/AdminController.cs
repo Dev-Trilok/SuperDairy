@@ -44,12 +44,38 @@ namespace SuperDairy.Controllers
         [HttpPost]
         public ActionResult GetBill(int userId, DateTime date)
         {
+
             var nextDate = date.AddDays(10);
             List<MilkInventory> list=MilkInventory.GetInventoryList(userId, date,nextDate, Common.ConnectionString);
+            var user = new Core.Model.User(userId, Common.ConnectionString);
+            int modifier = Int32.Parse(@User.Claims.Where(E => E.Type == ClaimTypes.NameIdentifier).First()?.Value);
             ViewData["InventoryList"] = list;
-            ViewData["TotalMilk"] = list.Sum(e => e.Quantity);
-            ViewData["TotalAmount"] = list.Sum(e => e.Amount);
+            var totalMilk= list.Sum(e => e.Quantity);
+            ViewData["TotalMilk"] = totalMilk;
+            var totalAmount= list.Sum(e => e.Amount); 
+            ViewData["TotalAmount"] = totalAmount;
+            ViewData["StartDate"] = date;
+            ViewData["EndDate"] = nextDate;
+            ViewData["UserId"] = userId;
+            ViewData["UserName"] = user.Name;
+            Bill bill = new Bill(userId, date, nextDate, Common.ConnectionString);
+            if (bill.Id == Guid.Empty)
+            {
+                bill = new Bill(userId, date, nextDate, totalMilk, totalAmount, false, DateTime.Now, DateTime.Now, modifier, modifier);
+                bill.Save(Common.ConnectionString);
+            }
+            ViewData["BillId"] = bill.Id;
+            ViewData["IsPaid"] = bill.IsPaid;
             return View();
+        }
+        [HttpPost]
+        public ActionResult MarkBillPaid(Guid guid)
+        {
+            Bill bill = new Bill(guid, Common.ConnectionString);
+            bill.IsPaid= true;
+            bill.LastModified=DateTime.Now;
+            bill.LastModifiedBy = Int32.Parse(@User.Claims.Where(E => E.Type == ClaimTypes.NameIdentifier).First()?.Value);
+            return new JsonResult(new { result=bill.Save(Common.ConnectionString)});
         }
     }
 }

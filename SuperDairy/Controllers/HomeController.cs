@@ -2,7 +2,6 @@
 using SuperDairy.Models;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
-using Core;
 using System.Security.Claims;
 using Core.Model;
 
@@ -35,9 +34,11 @@ namespace SuperDairy.Controllers
             return View();
         }
 
-        public ActionResult GetBill(DateTime startDate, DateTime endDate)
+        public ActionResult GetBill()
         {
-
+            int userId = Int32.Parse(User.Claims.Where(u => u.Type == ClaimTypes.NameIdentifier).First()?.Value ?? "0");
+            List<Bill> bills = Bill.GetBills(userId, Common.ConnectionString);
+            ViewData["Bills"]= bills;
             return View();
         }
 

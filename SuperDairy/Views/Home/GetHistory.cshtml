@@ -43,8 +43,6 @@
                         <th>Quantity</th>
                         <th class="table-active">Amount</th>
                     </tr>
-                    @*</tbody>
-                        <tbody>*@
                     <tr><td class="float-start" colspan="4">Morning</td></tr>
                     @foreach (MilkInventory item in buffaloMilk.Where(E => E.Batch == Core.TimeBatch.MORNING))
                     {
@@ -94,8 +92,6 @@
                         <th>Quantity</th>
                         <th class="table-active">Amount</th>
                     </tr>
-                    @*</tbody>
-                        <tbody>*@
                     <tr><td class="float-start" colspan="4">Morning</td></tr>
                     @foreach (MilkInventory item in cowMilk.Where(E => E.Batch == Core.TimeBatch.MORNING))
                     {
@@ -145,8 +141,6 @@
                         <th>Quantity</th>
                         <th class="table-active">Amount</th>
                     </tr>
-                    @*</tbody>
-                        <tbody>*@
                     <tr><td class="float-start" colspan="4">Morning</td></tr>
                     @foreach (MilkInventory item in otherMilk.Where(E => E.Batch == Core.TimeBatch.MORNING))
                     {
@@ -194,7 +188,7 @@
 }
 
 <div class="row mt-2">
-    <div class="col-4 input-group mb-3">
+    <div class="input-group mb-3">
         <div class="input-group-prepand" style="width:60%;background-color:transparent;">
             <span class="input-group-text" style="font-size:24px;font-weight:700;text-align:end;">Total Amount : </span>
         </div>
