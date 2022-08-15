@@ -160,7 +160,7 @@ namespace Core.Model
             {
                  UserCount = (Int32)cmd.ExecuteScalar();
             }
-            catch (Exception ex)
+            catch 
             {
                 return 0;
             }

@@ -57,13 +57,14 @@ namespace Core.Model
             List<Rate> rates = new();
             SqlConnection connection = new SqlConnection(connectionString);
             string sql;
-            if (milkType.HasValue)
+            if (milkType!=null)
                 sql = "select * from Rate WHERE MilkType = @milkType";
             
             else
                 sql = "select * from Rate";
             SqlCommand command = new SqlCommand(sql, connection);
-            command.Parameters.AddWithValue("@milkType", milkType);
+            if(milkType!=null)
+                command.Parameters.AddWithValue("@milkType", milkType);
             connection.Open();
             SqlDataReader reader = command.ExecuteReader();
             while(reader.Read())

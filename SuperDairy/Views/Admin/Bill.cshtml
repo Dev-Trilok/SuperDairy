@@ -3,6 +3,25 @@
     ViewData["Title"] = "Generate Bill";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section Stylesheet{
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
+    <style>
+        @@media print {
+          body * {
+            visibility: hidden;
+          }
+          #bill-section, #bill-section * {
+            visibility: visible;
+          }
+          #bill-section {
+            position: absolute;
+            left: 0;
+            top: 0;
+          }
+        }
+    </style>
+}
+<div class="row">
 <div class="col-lg-6">
     <div class="mb-3">
         <label asp-for="UserId" class="control-label">User Id :</label>
@@ -26,7 +45,7 @@
         <label for="day" class="control-label">Date :</label>
         <div class="row">
             <div class="col-4">
-                <select id="day" class="form-select" aria-label="Select Day">
+                <select id="day" tabindex="2" class="form-select" aria-label="Select Day">
                     <option selected>Select Day</option>
                     <option value="1">01-10</option>
                     <option value="11">11-20</option>
@@ -34,29 +53,27 @@
                 </select>
             </div>
             <div class="col-8">
-                <input type="month" class="form-control" id="month">
+                <input type="month" tabindex="3" class="form-control" id="month">
             </div>
         </div>
     </div>
     <div class="text-center">
-        <div class="btn btn-success" onclick="generateBill()">Generate</div>
+        <div class="btn btn-success" tabindex="4" onkeypress="generateBill()" onclick="generateBill()">Generate</div>
     </div>
 </div>
-@*@section Stylesheet{
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-}*@
-
-
-@*@section Scripts {
-@{
-await Html.RenderPartialAsync("_ValidationScriptsPartial");
-}
-*@
+<div id="bill-section" class="col-lg-6 mt-5 mt-lg-0">
+    <div class="m-5 p-5 text-center">
+                  <div class="spinner-grow text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+              </div>
+</div>
+</div>
 
 @section Scripts{
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"> </script>
 <script>
+    
     function changeUser(e) {
         $(".user-id-selector").val(e.currentTarget.value).trigger('change');
     }
@@ -73,15 +90,21 @@ await Html.RenderPartialAsync("_ValidationScriptsPartial");
         }
         let date=new Date(month);
         date.setDate(day);
-        console.log(date);
+        $.ajax('@Url.Action("GetBill","Admin")',{
+              data:{userId,date:new Date(date).toDateString() },
+              method:'POST',
+              success:(data)=>{
+                  $("#bill-section").html(data);
+              }
+          });
     }
     $(function() {
-    const monthControl = document.querySelector('input[type="month"]');
-const date= new Date()
-const month=("0" + (date.getMonth() + 1)).slice(-2)
-const year=date.getFullYear()
-monthControl.value = `${year}-${month}`;
-});
+        const monthControl = document.querySelector('input[type="month"]');
+        const date= new Date()
+        const month=("0" + (date.getMonth() + 1)).slice(-2)
+        const year=date.getFullYear()
+        monthControl.value = `${year}-${month}`;
+    });
     
 </script>
 }

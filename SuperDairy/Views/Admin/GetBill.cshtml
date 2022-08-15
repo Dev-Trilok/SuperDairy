@@ -1,8 +1,288 @@
-﻿@model dynamic
-
+﻿@using Core.Model
+@using Core
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    Layout = null;
+    List<MilkInventory> milkInventories = (ViewData["InventoryList"] as List<MilkInventory>);
+    var buffaloMilk = milkInventories.Where(e=>e.MilkType == MilkType.BUFFALO).GroupBy(e => e.Date);
+    var cowMilk = milkInventories.Where(e=>e.MilkType == MilkType.COW).GroupBy(e => e.Date);
+    var otherMilk = milkInventories.Where(e=>e.MilkType == MilkType.OTHER).GroupBy(e => e.Date);
+    var isPaid = (bool)ViewData["IsPaid"];
 }
+<script>
+    function markAsPaid(guid){
+        $.ajax({
+          type: "POST",
+          url: '@Url.Action("MarkBillPaid","Admin")',
+          data: {
+              guid:guid
+          },
+          success: function(result){
+            if(result.result===true ||  result.result==="true"){
+                $("#markPaid").text("Paid");
+                $("#markPaid").prop("disabled",true);
+            }
+          }
+        });
+    }
+    
+</script>
+<div class="row fw-bold">
+    <div class="col-2">Name: </div>
+    <div class="col-4 fw-bolder">@ViewData["UserName"]</div>
+    <div class="col-2">User Id:</div>
+    <div class="col-2 fw-bolder">@ViewData["UserId"]</div>
+</div>
+<div class="row fw-bolder mt-2">
+    <div class="col-2">Date:</div>
+    <div class="col-10">@(((DateTime)ViewData["StartDate"]).ToLongDateString()) to @(((DateTime)ViewData["EndDate"]).ToLongDateString())</div>
+</div>
+<hr />
+<table id="bill" class="table text-center table-bordered mt-4">
+    <thead>
+        <tr>
+            <th rowspan="2" colspan="2" style="vertical-align : middle;">Date</th>
+            <th colspan="4">Morning</th>
+            <th colspan="4">Evening</th>
+        </tr>
+        <tr>
+            <th>Quantity</th>
+            <th>Fat</th>
+            <th>Price</th>
+            <th>Amount</th>
+            <th>Quantity</th>
+            <th>Fat</th>
+            <th>Price</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (buffaloMilk.Any())
+        {
+            <tr>
+                <th colspan=10>Buffalo Milk</th>
+            </tr>   
+        }
+        @foreach (var item in buffaloMilk)
+        {
+            var m = new Stack<MilkInventory>(item.Where(e => e.Batch == TimeBatch.MORNING).ToList<MilkInventory>());
+            var e = new Stack<MilkInventory>(item.Where(e => e.Batch == TimeBatch.EVENING).ToList<MilkInventory>());
+            var key = item.Key.ToShortDateString();
+            int rows = m.Count > e.Count ? m.Count : e.Count;
+            while (m.Count != 0 || e.Count != 0)
+            {
+                <tr>
+                    @{
+                        if (rows > 0)
+                        {
+                            <th colspan="2" style="vertical-align : middle;" rowspan="@rows">@key</th>
+                        }
+                        MilkInventory a = null;
+                        try
+                        {
+                            a = m.Pop();
+                        }
+                        catch { }
+                        if (a != null)
+                        {
+                            <td>@a.Quantity</td>
+                            <td>@a.Fat</td>
+                            <td>@a.Price</td>
+                            <td>@a.Amount</td>
+                        }
+                        else
+                        {
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                        }
+                        a = null;
+                        try
+                        {
+                            a = e.Pop();
+                        }
+                        catch { }
+                        if (a != null)
+                        {
+                            <td>@a.Quantity</td>
+                            <td>@a.Fat</td>
+                            <td>@a.Price</td>
+                            <td>@a.Amount</td>
+                        }
+                        else
+                        {
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                        }
+                    }
+                </tr>
+                key = "";
+                rows = 0;
 
-<h2>title</h2>
+            }
+        }
+        @if (cowMilk.Any())
+        {
+            <tr>
+                <th colspan=10>Cow Milk</th>
+            </tr>   
+        }
+        @foreach (var item in cowMilk)
+        {
+            var m = new Stack<MilkInventory>(item.Where(e => e.Batch == TimeBatch.MORNING).ToList<MilkInventory>());
+            var e = new Stack<MilkInventory>(item.Where(e => e.Batch == TimeBatch.EVENING).ToList<MilkInventory>());
+            var key = item.Key.ToShortDateString();
+            int rows = m.Count > e.Count ? m.Count : e.Count;
+            while (m.Count != 0 || e.Count != 0)
+            {
+                <tr>
+                    @{
+                        if (rows > 0)
+                        {
+                            <th colspan="2" style="vertical-align : middle;" rowspan="@rows">@key</th>
+                        }
+                        MilkInventory a = null;
+                        try
+                        {
+                            a = m.Pop();
+                        }
+                        catch { }
+                        if (a != null)
+                        {
+                            <td>@a.Quantity</td>
+                            <td>@a.Fat</td>
+                            <td>@a.Price</td>
+                            <td>@a.Amount</td>
+                        }
+                        else
+                        {
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                        }
+                        a = null;
+                        try
+                        {
+                            a = e.Pop();
+                        }
+                        catch { }
+                        if (a != null)
+                        {
+                            <td>@a.Quantity</td>
+                            <td>@a.Fat</td>
+                            <td>@a.Price</td>
+                            <td>@a.Amount</td>
+                        }
+                        else
+                        {
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                        }
+                    }
+                </tr>
+                key = "";
+                rows = 0;
+
+            }
+        }
+        @if (otherMilk.Any())
+        {
+            <tr>
+                <th colspan=10>Other Milk</th>
+            </tr>   
+        }
+        @foreach (var item in otherMilk)
+        {
+            var m = new Stack<MilkInventory>(item.Where(e => e.Batch == TimeBatch.MORNING).ToList<MilkInventory>());
+            var e = new Stack<MilkInventory>(item.Where(e => e.Batch == TimeBatch.EVENING).ToList<MilkInventory>());
+            var key = item.Key.ToShortDateString();
+            int rows = m.Count > e.Count ? m.Count : e.Count;
+            while (m.Count != 0 || e.Count != 0)
+            {
+                <tr>
+                    @{
+                        if (rows > 0)
+                        {
+                            <th colspan="2" style="vertical-align : middle;" rowspan="@rows">@key</th>
+                        }
+                        MilkInventory a = null;
+                        try
+                        {
+                            a = m.Pop();
+                        }
+                        catch { }
+                        if (a != null)
+                        {
+                            <td>@a.Quantity</td>
+                            <td>@a.Fat</td>
+                            <td>@a.Price</td>
+                            <td>@a.Amount</td>
+                        }
+                        else
+                        {
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                        }
+                        a = null;
+                        try
+                        {
+                            a = e.Pop();
+                        }
+                        catch { }
+                        if (a != null)
+                        {
+                            <td>@a.Quantity</td>
+                            <td>@a.Fat</td>
+                            <td>@a.Price</td>
+                            <td>@a.Amount</td>
+                        }
+                        else
+                        {
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                            <td>0.0</td>
+                        }
+                    }
+                </tr>
+                key = "";
+                rows = 0;
+
+            }
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan=2></th>
+            <th colspan=2>Total Milk</th>
+            <th colspan=2>@ViewData["TotalMilk"]</th>
+            <th colspan=2>Total Amount</th>
+            <th colspan=2>@ViewData["TotalAmount"]</th>
+        </tr>
+    </tfoot>
+</table>
+
+<div class="row d-print-none">
+
+    @if (isPaid)
+    {
+        <button class="btn col-4 btn-primary" id="markPaid" disabled>Paid</button>
+    }
+    else
+    {
+        @if(milkInventories.Count > 0){
+            <button class="btn col-4 btn-primary" id="markPaid" onclick="markAsPaid('@ViewData["BillId"]')">Mark As Paid</button>
+        }
+    }
+        <div class="col-1"></div>
+        <button class="btn col-4 btn-success" onclick="window.print()">Print</button>
+</div>
+
+
