@@ -8,15 +8,19 @@
 <div>
     @*@User.Claims.Where(E=>E.Type == ClaimTypes.Role).First().Value*@
     
-    <div class="d-flex justify-content-center pt-4"><h1><font>Welcome</font></h1></div>
+    <div class="d-flex justify-content-center pt-4"><h1>Welcome</h1></div>
     <div class="d-flex justify-content-center ">
        
-        @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { @class = "" }))
+        @using (Html.BeginForm("Login", "Auth", FormMethod.Post, new { @class="m-0 p-0 col-12 col-md-6" }))
 
         {
             <div class="col-md-12 offset-md-12 mt-5">
                 <div class="card">
-                    <h4 class="card-header">Login</h4>
+                    <h4 class="card-header text-center">
+                        <img src="/assets/icons/icon-192x192.png" alt="Super Diary"/>
+                        <br/>
+                        Login
+                    </h4>
                     <div class="card-body">
                         <div class="form-group">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

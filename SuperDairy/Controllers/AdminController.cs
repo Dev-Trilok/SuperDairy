@@ -15,7 +15,6 @@ namespace SuperDairy.Controllers
         {
             int UserCount= Core.Model.User.GetUserCount(Common.ConnectionString, (int)Core.UserRole.SUPPLIER);
             ViewData["UserCount"] = UserCount;
-
             return View();
         }
 
