@@ -2,9 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using SuperDairy.Models.Admin;
 using SuperDairy.Models;
-using System.Web;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.IO;
 using System.Security.Claims;
 using Core.Model;
+using Microsoft.Data.SqlClient;
+
 namespace SuperDairy.Controllers
 {
     [Authorize(Policy = "AdminOnly")]
@@ -75,6 +79,51 @@ namespace SuperDairy.Controllers
             bill.LastModified=DateTime.Now;
             bill.LastModifiedBy = Int32.Parse(@User.Claims.Where(E => E.Type == ClaimTypes.NameIdentifier).First()?.Value);
             return new JsonResult(new { result=bill.Save(Common.ConnectionString)});
+        }
+
+        public ActionResult Backup()
+        {
+            return View();
+        }
+
+        public ActionResult DownloadBackup()
+        {
+            string dbName = "SuperDairy";
+            string backupDestination = Environment.CurrentDirectory+"\\SqlBackup";
+            
+            if (!Directory.Exists(backupDestination))
+                Directory.CreateDirectory(backupDestination);
+            string fileName=dbName+"-"+ DateTime.Now.ToString("yyyy-MM-dd@HH_mm") +".bak";
+            string query="BACKUP database " + dbName +" to disk='" + backupDestination +"\\" + fileName +"'";
+            //string con = "Data Source=MS;Initial Catalog=SuperDairy;Integrated Security=True;TrustServerCertificate=True";
+            using (SqlConnection connection=new SqlConnection(Common.ConnectionString))
+            {
+                using (SqlCommand cmd=new SqlCommand(query,connection))
+                {
+                    connection.Open();
+                    cmd.ExecuteScalar();
+                    connection.Close();
+                }
+            }
+            var bytes = System.IO.File.ReadAllBytes(Path.Combine(backupDestination, fileName));
+            if (Directory.Exists(backupDestination))
+            {
+                Directory.Delete(backupDestination,true);
+            }
+
+            return File(bytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+
+        }
+        public ActionResult RestoreBackup(RestoreForm model)
+        {
+            
+            var path=Path.GetTempPath()+model.BackupFile.FileName;
+            using (var stream = System.IO.File.Create(path))
+            {
+                model.BackupFile.CopyTo(stream);
+            }
+            
+            return new JsonResult(new {});
         }
     }
 }

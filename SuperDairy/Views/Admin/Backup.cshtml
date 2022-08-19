@@ -1,8 +1,54 @@
-﻿@model dynamic
+﻿@using SuperDairy.Models.Admin
+@model RestoreForm
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Backup";
     Layout = "_Layout";
 }
 
 <h2>Backup</h2>
+
+<div class="btn btn-outline-primary" onclick="downloadBackup()">Backup</div>
+<!--<form enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;"  method="post" asp-action="RestoreBackup">
+    <dl>
+        <dt>
+            <label asp-for="BackupFile"></label>
+        </dt>
+        <dd>
+            <input asp-for="BackupFile" type="file">
+            <span asp-validation-for="BackupFile"></span>
+        </dd>
+    </dl>
+    <input class="btn btn-outline-primary" type="submit" value="Upload" />
+</form>-->
+
+<div id="result"></div>
+<iframe style="display:none;" id="downloadFrame"></iframe>
+@section Scripts{
+<script>
+          function downloadBackup(){
+              document.getElementById("downloadFrame").src="@Url.Action("DownloadBackup")"
+          }
+            async function AJAXSubmit (oFormElement) {
+                debugger;
+              var resultElement = document.getElementById("result");
+              const formData = new FormData(oFormElement);
+
+              try {
+              const response = await fetch(oFormElement.action, {
+                method: 'POST',
+                body: formData
+              });
+
+              if (response.ok) {
+                alert("Restore Successful");
+              }
+
+              resultElement.value = 'Result: ' + response.status + ' ' +
+                response.statusText;
+              } catch (error) {
+                console.error('Error:', error);
+              }
+            }
+</script>
+}
