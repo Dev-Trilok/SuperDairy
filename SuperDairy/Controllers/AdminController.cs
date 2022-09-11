@@ -17,8 +17,12 @@ namespace SuperDairy.Controllers
     {
         public IActionResult Index()
         {
-            int UserCount= Core.Model.User.GetUserCount(Common.ConnectionString, (int)Core.UserRole.SUPPLIER);
-            ViewData["UserCount"] = UserCount;
+            ViewData["UserCount"] = Core.Model.User.GetUserCount(Common.ConnectionString, (int)Core.UserRole.SUPPLIER);
+            ViewData["todayBuffaloMilk"] =  Core.Model.MilkInventory.GetTodayMilkCount(Common.ConnectionString, (int)Core.MilkType.BUFFALO);
+            ViewData["todayCowMilk"] = Core.Model.MilkInventory.GetTodayMilkCount(Common.ConnectionString, (int)Core.MilkType.COW);
+            ViewData["todayAvgBuffaloFat"] = Core.Model.MilkInventory.GetTodayAvgFat(Common.ConnectionString, (int)Core.MilkType.BUFFALO);
+            ViewData["todayAvgCowFat"] = Core.Model.MilkInventory.GetTodayAvgFat(Common.ConnectionString, (int)Core.MilkType.COW);
+
             return View();
         }
 

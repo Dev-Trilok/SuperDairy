@@ -32,15 +32,13 @@
                 <br />
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>*@
-            <label asp-for="Role" class="form-check-label"></label><br />
-               
+            <label asp-for="Role" class="form-check-label"></label><br />     
             <div class="form-group form-check form-check-inline">
                
                 <input type="radio" class="form-check-input" id="roleAdmin" asp-for="Role" value="@Core.UserRole.ADMIN" />@Core.UserRole.ADMIN.ToString() 
                 <br />
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
-
             <div class="form-group form-check form-check-inline">
                <input type="radio" id="roleSupplier" class="form-check-input" checked asp-for="Role" value="@Core.UserRole.SUPPLIER" />@Core.UserRole.SUPPLIER.ToString()
                 <br />

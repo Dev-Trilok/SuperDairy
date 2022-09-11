@@ -27,14 +27,16 @@ namespace Core.Model
         [DataType(DataType.Password)]
 
         public string Password { get; set; }
-
+        /*public string Address { get; set; }
+*/
         public Guid AddressId { get; set; }
 
         public UserRole Role { get; set; }
-
+        [Display(Name = "Created Date")]
         public DateTime CreatedDate { get; set; }
-
+        [Display(Name = "Last Modified")]
         public DateTime LastModified { get; set; }
+        [Display(Name = "Is Active User")]
 
         public bool IsActive { get; set; } 
         #endregion

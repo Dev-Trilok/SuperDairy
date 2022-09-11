@@ -10,6 +10,7 @@
 <p>
     <a class="btn btn-primary" href="#" onclick="newRate();">Create New</a>
 </p>
+<h6> Buffalo Rate</h6>
 <table class="table">
     <thead>
         <tr>
@@ -28,6 +29,7 @@
             <th></th>
         </tr>
     </thead>
+    
     <tbody>
 @foreach (Core.Model.Rate item in Model.BuffaloRateList) {
         <tr>
@@ -46,11 +48,58 @@
             
             <td>
                 <a class="btn btn-primary" href="#" onclick="editRate(@item.Id)">Edit</a> 
-                @Html.ActionLink("FatRate", "Delete", new { id=item.Id},new { @class = "btn btn-danger" })
+                <a class="btn btn-danger" href="#" onclick="deleteRate(@item.Id)">Delete</a> 
             </td>
         </tr>
 }
     </tbody>
+   
+</table>
+<br/>
+<h6> Cow Rate</h6>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Milk Type
+            </th>
+            <th>
+                Fat
+            </th>
+            <th>
+                Price
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    
+    <tbody>
+@foreach (Core.Model.Rate item in Model.CowRateList) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MilkType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fat)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            
+            <td>
+                <a class="btn btn-primary" href="#" onclick="editRate(@item.Id)">Edit</a> 
+                <a class="btn btn-danger" href="#" onclick="deleteRate(@item.Id)">Delete</a> 
+            </td>
+        </tr>
+}
+    </tbody>
+   
 </table>
 <script>
     
@@ -70,5 +119,20 @@
     function editRate(id){
         let body=showModal("Edit Fat Rate",saveEditRate,null);
         $(body).load(`@Url.Action("Edit","FatRate")?id=${id}`);
+    }
+    function deleteRate (id){
+         $.ajax({
+          type: "POST",
+          url: '@Url.Action("Delete","FatRate")',
+          data: {
+              id:id
+          },
+          success: function(result){
+            location.reload()
+          },
+            error:(e) => {
+                console.log(e)
+            }
+        });
     }
 </script>

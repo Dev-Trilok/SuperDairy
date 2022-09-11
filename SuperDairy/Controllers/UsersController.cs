@@ -76,7 +76,7 @@ namespace SuperDairy.Controllers
         }
 
         // Get: UsersController/Delete/5
-        [ValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult Delete(int id)
         {
             try

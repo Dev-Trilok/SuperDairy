@@ -106,6 +106,20 @@ namespace Core.Model
                 connection.Close();
             }
         }
+        public static bool DeleteRate(int id, string connectionString)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+            string sql = "delete from rate where Id=" + id;
+            SqlCommand cmd = new(sql, connection);
+            bool result = false;
+            try
+            {
+                connection.Open();
+                result = cmd.ExecuteNonQuery() > 0;
+            }
+            finally { connection.Close(); }
+            return result;
+        }
 
 
 
