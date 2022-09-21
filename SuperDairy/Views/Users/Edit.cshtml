@@ -27,6 +27,11 @@ margin-bottom:15px;}
                 <input asp-for="ContactNo" class="form-control" />
                 <span asp-validation-for="ContactNo" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" type="textarea" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
             <div class="form-group margin-bottom">
                 <label asp-for="Password" class="control-label"></label>
                 <input asp-for="Password" class="form-control" />
@@ -34,13 +39,26 @@ margin-bottom:15px;}
             </div>
             @Html.HiddenFor(model=>model.CreatedDate)
             @Html.HiddenFor(model=>model.Id)
-             <div class="form-group margin-bottom">
+            @* <div class="form-group margin-bottom">
                 <label asp-for="Role" class="control-label"></label><br/>
                 <input type="radio" class="form-check-input" id="roleAdmin"  asp-for="Role" value="@Core.UserRole.ADMIN"  /><span> @Core.UserRole.ADMIN.ToString() </span> 
                 <input type="radio" id="roleSupplier" class="form-check-input"  asp-for="Role" value="@Core.UserRole.SUPPLIER"  /><span> @Core.UserRole.SUPPLIER.ToString() </span>
                 <br/>
                 <span asp-validation-for="Role" class="text-danger"></span>
+            </div>*@
+             <label asp-for="Role" class="form-check-label"></label><br />     
+            <div class="form-group form-check form-check-inline">
+               
+                <input type="radio" class="form-check-input" id="roleAdmin" asp-for="Role" value="@Core.UserRole.ADMIN" />@Core.UserRole.ADMIN.ToString() 
+                <br />
+                <span asp-validation-for="Role" class="text-danger"></span>
             </div>
+            <div class="form-group form-check form-check-inline">
+               <input type="radio" id="roleSupplier" class="form-check-input"  asp-for="Role" value="@Core.UserRole.SUPPLIER" />@Core.UserRole.SUPPLIER.ToString()
+                <br />
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+            <br />
             <div class="form-group form-check margin-bottom">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)

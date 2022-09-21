@@ -10,13 +10,22 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SuperDairy.styles.css" asp-append-version="true" />
  
-        <link rel="stylesheet" href="https://unicentric-cdn.s3.amazonaws.com/dist/bootstrap431/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://unicentric-cdn.s3.amazonaws.com/dist/kendoui/styles/kendo.common-bootstrap.min.css" />
-    <link rel="stylesheet" href="https://unicentric-cdn.s3.amazonaws.com/dist/kendoui/styles/kendo.bootstrap-v4.min.css" />
-    <link href='https://unicentric-cdn.s3.amazonaws.com/css/font-awesome/css/font-awesome.css' rel="stylesheet" type="text/css" />
-
-
+       
     @await RenderSectionAsync("Stylesheet", required: false)
+    <style>
+       
+        .modal-dialog {
+            overflow-y: initial !important
+        }
+
+        .modal-body {
+                position: relative;
+                flex: 1 1 auto;
+                padding: 1rem;
+                height: 70vh;
+                overflow-y: auto;
+            }
+    </style>
 </head>
 <body>
     @if (User.Identity != null && User.Identity.IsAuthenticated)

@@ -83,7 +83,60 @@ namespace Core.Model
             UpdatedOn = reader.GetDateTime(13);
             UpdatedBy = reader.GetInt32(14);
         }
+        public static double GetTodayMilkCount(string Conn, int MilkType = -1)
+        {
+            SqlConnection con = new SqlConnection(Conn);
+            con.Open();
+            string sql;
+            if (MilkType != -1)
+                sql = "select sum (quantity) from MilkInventory where CAST(date AS DATE) = CAST(GETDATE() AS DATE) and MilkType=" + MilkType;
+            else
+                sql = "select sum (quantity) from MilkInventory where CAST(date AS DATE) = CAST(GETDATE() AS DATE) ";
+            SqlCommand cmd = new SqlCommand(sql, con);
+            cmd.CommandType = System.Data.CommandType.Text;
+            double milkCount = 0;
+            try
+            {
+                milkCount = (double)cmd.ExecuteScalar();
+            }
+            catch
+            {
+                return 0;
+            }
+            finally
+            {
+                con.Close();
+            }
+            return milkCount;
 
+        }
+        public static double GetTodayAvgFat(string Conn, int MilkType = -1)
+        {
+            SqlConnection con = new SqlConnection(Conn);
+            con.Open();
+            string sql;
+            if (MilkType != -1)
+                sql = "select avg(fat) from MilkInventory where CAST(date AS DATE) = CAST(GETDATE() AS DATE) and MilkType=" + MilkType;
+            else
+                sql = "select avg(fat) from MilkInventory where CAST(date AS DATE) = CAST(GETDATE() AS DATE) ";
+            SqlCommand cmd = new SqlCommand(sql, con);
+            cmd.CommandType = System.Data.CommandType.Text;
+            double avgFat = 0;
+            try
+            {
+                avgFat = (double)cmd.ExecuteScalar();
+            }
+            catch
+            {
+                return 0;
+            }
+            finally
+            {
+                con.Close();
+            }
+            return avgFat;
+
+        }
         public bool Save(string connectionString, bool isNew = false)
         {
             SqlConnection connection = new SqlConnection(connectionString);
