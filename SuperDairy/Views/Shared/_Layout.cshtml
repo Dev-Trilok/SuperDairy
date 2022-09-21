@@ -121,6 +121,8 @@
 <script>
     function saveEditUser(){
         hideModal();
+        $("#editUser").attr("action","/Users/Edit?redirectUrl="+window.location)
+        console.log($("#editUser").attr("action"))
         $("#editUser").submit();
     }
     function userProfile(userId){

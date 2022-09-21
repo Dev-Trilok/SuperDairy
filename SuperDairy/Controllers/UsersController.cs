@@ -5,7 +5,7 @@ using SuperDairy.Models;
 using Microsoft.AspNetCore.Authorization;
 namespace SuperDairy.Controllers
 {
-    [Authorize(Policy = "AdminOnly")]
+    //[Authorize(Policy = "AdminOnly")]
     public class UsersController : Controller
     {
 
@@ -51,6 +51,7 @@ namespace SuperDairy.Controllers
         }
 
         // GET: UsersController/Edit/5
+
         public ActionResult Edit(int id)
         {
             User user = new User(id, Common.ConnectionString);
@@ -67,6 +68,9 @@ namespace SuperDairy.Controllers
                 //user.Id = id;
                 user.LastModified = DateTime.Now;
                 user.Save(Common.ConnectionString);
+                var p = Request.Query["redirectUrl"][0];
+                if (p != null)
+                    return Redirect(p);
                 return RedirectToAction(nameof(Index));
             }
             catch

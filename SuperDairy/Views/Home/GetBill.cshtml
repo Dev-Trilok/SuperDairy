@@ -8,78 +8,78 @@
 <h2>Check Bill</h2>
 
 @section Stylesheet{
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"/>
-    <style>
-            @@media print {
-              body * {
-                visibility: hidden;
-              }
-              #show-bill, #show-bill * {
-                visibility: visible;
-              }
-              #show-bill {
-                position: absolute;
-                left: 0;
-                top: 0;
-              }
-            }
-        </style>
-}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
+<style>
+    @@media print {
+        body * {
+            visibility: hidden;
+        }
 
+        #show-bill, #show-bill * {
+            visibility: visible;
+        }
+
+        #show-bill {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    }
+</style>
+}
 <div class="row">
     <div class="col-12 col-lg-5">
         <table id="bill-section" class="table">
             <thead>
-            <tr>
-                <th>#</th>
-                <th>Date From - To</th>
-                <th>Amount</th>
-                <th>Options</th>
-            </tr>
+                <tr>
+                    <th>#</th>
+                    <th>Date From - To</th>
+                    <th>Amount</th>
+                    <th>Options</th>
+                </tr>
             </thead>
             <tbody>
-            @foreach (var item in bills)
-            {
-                <tr class="@(item.IsPaid ? "table-success" : "")">
-                    <th>
-                        @(bills.IndexOf(item) + 1)
-                    </th>
-                    <td>
-                        @item.StartDate.ToShortDateString() - @item.EndDate.ToShortDateString()
-                    </td>
-                    <td>@item.TotalAmount</td>
-                    <td>
-                        <button disabled class="btn @(item.IsPaid ? "btn-success" : "btn-danger")">@(item.IsPaid ? "Paid" : "Pending")</button>
-                        <button class="btn btn-primary" onclick="showBill('@item.Id')">View</button>
-                    </td>
-                </tr>
-            }
+                @foreach (var item in bills)
+                {
+                    <tr class="@(item.IsPaid ? "table-success" : "")">
+                        <th>
+                            @(bills.IndexOf(item) + 1)
+                        </th>
+                        <td>
+                            @item.StartDate.ToShortDateString() - @item.EndDate.ToShortDateString()
+                        </td>
+                        <td>@item.TotalAmount</td>
+                        <td>
+                            <button disabled class="btn @(item.IsPaid ? "btn-success" : "btn-danger")">@(item.IsPaid ? "Paid" : "Pending")</button>
+                            <button class="btn btn-primary" onclick="showBill('@item.Id')">View</button>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
     <div class="mt-5 mt-lg-1 col-12 col-lg-7 table-responsive" id="show-bill">
-
     </div>
 </div>
 
 @section Scripts{
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"> </script>
-    <script>
-        $(document).ready( function () {
-            $('#bill-section').DataTable({
-                paging: false,
-                searching: false,
-                select: true
-            });
-        } );
-        function showBill(guid){
-            $.ajax('@Url.Action("ShowBill", "Home")',{
-                          data:{id:guid},
-                          method:'POST',
-                          success:(data)=>{
-                              $("#show-bill").html(data);
-                          }
-                      });
-        }
-    </script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"> </script>
+<script>
+    $(document).ready( function () {
+        $('#bill-section').DataTable({
+            paging: false,
+            searching: false,
+            select: true
+        });
+    } );
+    function showBill(guid){
+        $.ajax('@Url.Action("ShowBill", "Home")',{
+                      data:{id:guid},
+                      method:'POST',
+                      success:(data)=>{
+                          $("#show-bill").html(data);
+                      }
+                  });
+    }
+</script>
 }
