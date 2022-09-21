@@ -3,9 +3,9 @@
 @{
     Layout = null;
     List<MilkInventory> milkInventories = (ViewData["InventoryList"] as List<MilkInventory>);
-    var buffaloMilk = milkInventories.Where(e=>e.MilkType == MilkType.BUFFALO).GroupBy(e => e.Date);
-    var cowMilk = milkInventories.Where(e=>e.MilkType == MilkType.COW).GroupBy(e => e.Date);
-    var otherMilk = milkInventories.Where(e=>e.MilkType == MilkType.OTHER).GroupBy(e => e.Date);
+    var buffaloMilk = milkInventories.Where(e => e.MilkType == MilkType.BUFFALO).GroupBy(e => e.Date);
+    var cowMilk = milkInventories.Where(e => e.MilkType == MilkType.COW).GroupBy(e => e.Date);
+    var otherMilk = milkInventories.Where(e => e.MilkType == MilkType.OTHER).GroupBy(e => e.Date);
 }
 <script>
     function markAsPaid(guid){
@@ -23,9 +23,18 @@
           }
         });
     }
-    
+
 </script>
 
+<div class="text-center fw-bold mb-4 h3">
+    Super Dairy
+</div>
+<div class="row fw-bold">
+    <div class="col-2">Name: </div>
+    <div class="col-4 fw-bolder">@ViewData["UserName"]</div>
+    <div class="col-2">User Id:</div>
+    <div class="col-2 fw-bolder">@ViewData["UserId"]</div>
+</div>
 <div class="row fw-bolder mt-2">
     <div class="col-2">Date:</div>
     <div class="col-10">@(((DateTime)ViewData["StartDate"]).ToLongDateString()) to @(((DateTime)ViewData["EndDate"]).ToLongDateString())</div>
@@ -54,7 +63,7 @@
         {
             <tr>
                 <th colspan=10>Buffalo Milk</th>
-            </tr>   
+            </tr>
         }
         @foreach (var item in buffaloMilk)
         {
@@ -121,7 +130,7 @@
         {
             <tr>
                 <th colspan=10>Cow Milk</th>
-            </tr>   
+            </tr>
         }
         @foreach (var item in cowMilk)
         {
@@ -188,7 +197,7 @@
         {
             <tr>
                 <th colspan=10>Other Milk</th>
-            </tr>   
+            </tr>
         }
         @foreach (var item in otherMilk)
         {

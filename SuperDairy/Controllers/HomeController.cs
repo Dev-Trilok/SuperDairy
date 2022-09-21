@@ -61,6 +61,8 @@ namespace SuperDairy.Controllers
             ViewData["StartDate"] = bill.StartDate;
             ViewData["EndDate"] = bill.EndDate;
             ViewData["IsPaid"] = bill.IsPaid;
+            ViewData["UserName"] = User.Claims.Where(u => u.Type == ClaimTypes.Name).First()?.Value;
+            ViewData["UserId"] = User.Claims.Where(u => u.Type == ClaimTypes.NameIdentifier).First()?.Value;
             return View();
         }
     }
