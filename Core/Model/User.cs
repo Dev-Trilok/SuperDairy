@@ -27,9 +27,8 @@ namespace Core.Model
         [DataType(DataType.Password)]
 
         public string Password { get; set; }
-        /*public string Address { get; set; }
-*/
-        public Guid AddressId { get; set; }
+        
+        public string Address { get; set; }
 
         public UserRole Role { get; set; }
         [Display(Name = "Created Date")]
@@ -53,7 +52,7 @@ namespace Core.Model
             Name = reader.GetString("Name");
             ContactNo = reader.GetString("ContactNo");
             Password = reader.GetString("Password");
-            AddressId = reader.GetGuid("AddressId");
+            Address = reader.GetString("Address");
             Role = (UserRole )reader.GetInt32("Role");
             CreatedDate = reader.GetDateTime("Created");
             LastModified = reader.GetDateTime("LastModified");
@@ -61,11 +60,11 @@ namespace Core.Model
 
         }
 
-        public User(int id, string name, Guid addressId, string contactNo, string password, UserRole role, DateTime createdDate, DateTime lastModified, bool isActive)
+        public User(int id, string name, string address, string contactNo, string password, UserRole role, DateTime createdDate, DateTime lastModified, bool isActive)
         {
             Id = id;
             Name = name;
-            AddressId = addressId;
+            Address = address;
             ContactNo = contactNo;
             Password = password;
             Role = role;
@@ -216,11 +215,11 @@ namespace Core.Model
             SqlConnection con = new SqlConnection(Conn);
             string sql;
             if (Id == 0 || isNew)
-                sql = "insert into Users values(@Name,@ContactNo,@Password,@AddressId,@Role,@Created,@LastModified,@IsActive)";
+                sql = "insert into Users values(@Name,@ContactNo,@Password,@Address,@Role,@Created,@LastModified,@IsActive)";
             else if(Password==null)
-                sql = "update Users set Name=@Name,ContactNo=@ContactNo,AddressId=@AddressId,Role=@Role,Created=@Created,LastModified=@LastModified,IsActive=@IsActive where Id="+Id;
+                sql = "update Users set Name=@Name,ContactNo=@ContactNo,Address=@Address,Role=@Role,Created=@Created,LastModified=@LastModified,IsActive=@IsActive where Id="+Id;
             else
-                sql = "update Users set Name=@Name,ContactNo=@ContactNo,Password=@Password,AddressId=@AddressId,Role=@Role,Created=@Created,LastModified=@LastModified,IsActive=@IsActive where Id=" + Id;
+                sql = "update Users set Name=@Name,ContactNo=@ContactNo,Password=@Password,Address=@Address,Role=@Role,Created=@Created,LastModified=@LastModified,IsActive=@IsActive where Id=" + Id;
             SqlCommand cmd = new SqlCommand(sql, con);
             cmd.CommandType = System.Data.CommandType.Text;
 
@@ -228,7 +227,7 @@ namespace Core.Model
             cmd.Parameters.AddWithValue("ContactNo", ContactNo);
             if(Password!=null)
                 cmd.Parameters.AddWithValue("Password", Password);
-            cmd.Parameters.AddWithValue("AddressId", AddressId);
+            cmd.Parameters.AddWithValue("Address", Address);
             cmd.Parameters.AddWithValue("Role", Role);
             cmd.Parameters.AddWithValue("Created", CreatedDate);
             cmd.Parameters.AddWithValue("LastModified", LastModified);

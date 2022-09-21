@@ -76,7 +76,7 @@ namespace SuperDairy.Controllers
                     Core.Model.User user = new Core.Model.User
                     {
                         Name = model.Name,
-                        AddressId = Guid.Empty,
+                        Address = String.Empty,
                         ContactNo = model.ContactNo,
                         Password = model.Password,
                         CreatedDate = DateTime.Now,

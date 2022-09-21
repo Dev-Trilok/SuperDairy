@@ -1,7 +1,3 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
 function showModal(title, onSave, onCancel ) {
     onCancel = onCancel != null ? onCancel : () => {
         $("#mainModal").modal('hide');
@@ -125,7 +121,7 @@ function popupMessage(id, message) {
     $('#' + id).dialog({
         height: 200
         , modal: true
-        , title: 'UNICENTRIC'
+        , title: 'SuperDairy'
         , buttons: {
             "OK": function () {
                 $(this).dialog("close");
@@ -137,7 +133,7 @@ function popupMessage(id, message) {
 
 function confirmCustomPopup(id, message, functionName) {
     $('#' + id).html(message);
-    $('#' + id).dialog({ height: 200 }, { modal: true }, { title: 'UNICENTRIC' }, {
+    $('#' + id).dialog({ height: 200 }, { modal: true }, { title: "SuperDairy"}, {
         buttons: [
             {
                 text: "Cancel",
